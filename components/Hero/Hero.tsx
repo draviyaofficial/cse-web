@@ -3,10 +3,29 @@
 import HeroLogos from "./HeroLogos";
 import { motion } from "motion/react";
 import HeroText from "./HeroText";
+import Link from "next/link";
+
+const SOCIALS = [
+  {
+    title: "Twitter",
+    icon: "/images/socials/twitter.png",
+    link: "",
+  },
+  {
+    title: "Instagram",
+    icon: "/images/socials/instagram.png",
+    link: "",
+  },
+  {
+    title: "GitHub",
+    icon: "/images/socials/github.png",
+    link: "",
+  },
+];
 
 const Hero = () => {
   return (
-    <section className="relative h-[300dvh] w-dvw">
+    <section className="relative h-fit w-dvw">
       {/* HERO TOP - Background + Floating Logos */}
       <div className="hero relative h-dvh w-dvw overflow-hidden">
         {/* Background image */}
@@ -62,6 +81,47 @@ const Hero = () => {
             transition={{ delay: 0.8, duration: 1 }}
           />
         </motion.div>
+      </div>
+
+      <div className="flex flex-col items-center justify-center my-30 gap-10">
+        <h2 className="font-medium text-2xl text-center">
+          You’ve been investing in creators emotionally.
+          <br /> Try financially.
+        </h2>
+        <button
+          type="button"
+          className="text-xl border border-zinc-900 bg-linear-to-t from-[#FF2F00] to-[#f5775b] cursor-pointer hover:from-[#FF2F00] hover:to-[#FF2F00] font-semibold text-white px-7 py-3 rounded-full transition-all duration-300 relative z-50"
+        >
+          Join the revolution
+        </button>
+        <div className="flex flex-col gap-3 items-center">
+          <div className="flex">
+            {SOCIALS.map((social, index) => {
+              const randomRotation = Math.random() * 20 - 10;
+
+              return (
+                <Link key={index} href={social.link}>
+                  <div
+                    className="p-3 border border-zinc-300 bg-white shadow-zinc-500 rounded-xl hover:-translate-y-2 duration-300 transition-all"
+                    style={{
+                      transform: `rotate(${randomRotation}deg)`,
+                    }}
+                  >
+                    <img
+                      src={social.icon}
+                      alt={social.title}
+                      className="h-7 w-7"
+                    />
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          <p className="text-zinc-700 font-medium">
+            Follow us on these platforms
+          </p>
+        </div>
       </div>
     </section>
   );
