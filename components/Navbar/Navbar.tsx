@@ -1,101 +1,69 @@
 "use client";
 
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { useState, useEffect } from "react";
-
-const NAV_ITEMS = [
-  { title: "Resources", link: "/resources" },
-  { title: "About", link: "/about" },
-  { title: "Connect", link: "/connect" },
-];
+import Logo from "./Logo";
+import BurgerButton from "./BurgerButton";
+import NavLinks from "./NavLinks";
+import CTAButton from "./CTAButton";
+import MobileMenu from "./MobileMenu";
 
 const Navbar = () => {
-  // Whether navbar container should be visible
   const [isVisible, setIsVisible] = useState(true);
-
-  // Previous scroll Y position
   const [lastScrollY, setLastScrollY] = useState(0);
-
-  // Tracks how much user scrolls in a single direction
   const [scrollDelta, setScrollDelta] = useState(0);
-
-  // Mobile menu toggle
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Scroll distance required before hiding navbar
   const scrollThreshold = 120;
 
+  /* ---------------------------------------------
+  HANDLE NAVBAR SHOW/HIDE ON SCROLL
+  --------------------------------------------- */
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const scrollDifference = currentScrollY - lastScrollY;
+      const current = window.scrollY;
+      const diff = current - lastScrollY;
 
-      // -----------------------------
-      // TRACK SCROLL DIRECTION + DELTA
-      // -----------------------------
-      // If scrolling in the same direction → accumulate delta
-      // If direction changes → reset delta to start fresh
-      const newScrollDelta =
-        (scrollDelta >= 0 && scrollDifference > 0) ||
-        (scrollDelta <= 0 && scrollDifference < 0)
-          ? scrollDelta + scrollDifference
-          : scrollDifference;
+      const newDelta =
+        Math.sign(scrollDelta) === Math.sign(diff) ? scrollDelta + diff : diff;
 
-      setScrollDelta(newScrollDelta);
+      setScrollDelta(newDelta);
 
-      // -----------------------------
-      // LOGIC TO SHOW / HIDE NAVBAR
-      // -----------------------------
-      // When near the top → navbar should always show
-      if (currentScrollY < 50) {
+      if (current < 50) {
         setIsVisible(true);
         setScrollDelta(0);
-      }
-      // Hide navbar after scrolling down continuously past threshold
-      else if (newScrollDelta > scrollThreshold && currentScrollY > 150) {
+      } else if (newDelta > scrollThreshold && current > 150) {
         setIsVisible(false);
-      }
-      // Show navbar if user scrolls up even a little
-      else if (
-        newScrollDelta < -50 ||
-        (scrollDifference < 0 && currentScrollY > 50)
-      ) {
+      } else if (newDelta < -50 || diff < 0) {
         setIsVisible(true);
         setScrollDelta(0);
       }
 
-      // Update last known scroll position
-      setLastScrollY(currentScrollY);
+      setLastScrollY(current);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY, scrollDelta, scrollThreshold]);
+  }, [lastScrollY, scrollDelta]);
 
-  // Handle clicking outside mobile menu to close it
+  /* ---------------------------------------------
+  CLOSE MENU ON OUTSIDE CLICK
+  --------------------------------------------- */
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Element;
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as Element;
       if (isMobileMenuOpen && !target.closest(".mobile-menu-container")) {
         setIsMobileMenuOpen(false);
       }
     };
 
-    if (isMobileMenuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    if (isMobileMenuOpen) document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
   }, [isMobileMenuOpen]);
 
   return (
-    <div className="mobile-menu-container w-dvw h-[100px] flex items-center justify-center fixed top-0 left-0 z-9999">
-      {/* ---------------------------------------
-          NAVBAR CONTAINER (Animated show/hide)
-      ---------------------------------------- */}
+    <div className="mobile-menu-container fixed top-0 left-0 w-dvw h-[100px] flex items-center justify-center z-9999">
+      {/* Animated Navbar Shell */}
       <motion.div
         initial={{ scaleX: 0, scaleY: 0, opacity: 0 }}
         animate={{
@@ -103,212 +71,32 @@ const Navbar = () => {
           scaleY: isVisible ? 1 : 0,
           opacity: isVisible ? 1 : 0,
         }}
-        transition={{
-          scaleX: {
-            duration: 0.8,
-            ease: [0.23, 1, 0.32, 1],
-            delay: isVisible ? 0 : 0.3, // Delay shrinking after fade-out
-          },
-          scaleY: {
-            duration: 0.8,
-            ease: [0.23, 1, 0.32, 1],
-            delay: isVisible ? 0 : 0.3,
-          },
-          opacity: {
-            duration: isVisible ? 0.8 : 0.5, // Faster fade on hide
-            ease: [0.23, 1, 0.32, 1],
-            delay: isVisible ? 0 : 0.3,
-          },
-        }}
-        className="border border-zinc-700 w-fit h-fit py-3 px-7 rounded-full bg-black flex justify-between gap-32 shadow-2xl shadow-zinc-800 origin-center overflow-hidden"
+        transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+        className="border border-zinc-700 bg-black py-3 px-7 rounded-full flex justify-between gap-32 shadow-2xl shadow-zinc-800 origin-center"
       >
-        {/* ---------------------------------------
-            LOGO + ICON (Fades in/out)
-        ---------------------------------------- */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isVisible ? 1 : 0 }}
-          transition={{
-            delay: isVisible ? 0.3 : 0, // Slight delay when appearing
-            duration: 0.4,
-            ease: [0.23, 1, 0.32, 1],
-          }}
-          className="flex gap-2 items-center"
-        >
-          <img
-            src="/images/logo/logo-icon.jpeg"
-            alt=""
-            className="h-8 rounded-md"
+        <Logo />
+
+        {/* Mobile Button */}
+        <div className="md:hidden">
+          <BurgerButton
+            isOpen={isMobileMenuOpen}
+            toggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           />
-          <img src="/images/logo/logo-name.jpeg" alt="" className="h-6" />
-        </motion.div>
+        </div>
 
-        {/* ---------------------------------------
-            MOBILE BURGER MENU ICON
-        ---------------------------------------- */}
+        {/* Desktop Navigation */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: isVisible ? 1 : 0 }}
-          transition={{
-            delay: isVisible ? 0.3 : 0,
-            duration: 0.4,
-            ease: [0.23, 1, 0.32, 1],
-          }}
-          className="md:hidden"
-        >
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="flex flex-col gap-1 p-2 hover:bg-zinc-800 rounded-lg transition-colors duration-200"
-            aria-label="Toggle mobile menu"
-          >
-            <div
-              className={`w-5 h-0.5 bg-white transition-all duration-300 ${
-                isMobileMenuOpen ? "rotate-45 translate-y-1.5" : ""
-              }`}
-            ></div>
-            <div
-              className={`w-5 h-0.5 bg-white transition-all duration-300 ${
-                isMobileMenuOpen ? "opacity-0" : ""
-              }`}
-            ></div>
-            <div
-              className={`w-5 h-0.5 bg-white transition-all duration-300 ${
-                isMobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""
-              }`}
-            ></div>
-          </button>
-        </motion.div>
-
-        {/* ---------------------------------------
-            NAV LINKS + CTA
-        ---------------------------------------- */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isVisible ? 1 : 0 }}
-          transition={{
-            delay: isVisible ? 0.5 : 0, // Links fade in last
-            duration: 0.4,
-            ease: [0.23, 1, 0.32, 1],
-          }}
+          transition={{ duration: 0.4, delay: 0.3 }}
           className="hidden md:flex gap-10"
         >
-          {/* ----- Navigation Links ------ */}
-          <div className="flex gap-5 items-center font-semibold">
-            {NAV_ITEMS.map((item, key) => (
-              <motion.div
-                key={key}
-                className="relative"
-                whileHover="hover"
-                initial="default"
-              >
-                <Link href={item.link} className="block">
-                  <div className="text-white cursor-pointer">{item.title}</div>
-
-                  {/* Underline hover animation */}
-                  <motion.div
-                    className="absolute bottom-0 left-0 h-[2px] bg-white"
-                    variants={{
-                      default: { width: 0 },
-                      hover: { width: "100%" },
-                    }}
-                    transition={{
-                      duration: 0.5,
-                      ease: [0.23, 1, 0.32, 1],
-                    }}
-                  />
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* ----- CTA Button ------ */}
-          <button
-            type="button"
-            className="bg-linear-to-t from-zinc-800 to-zinc-700 border cursor-pointer hover:from-zinc-900 hover:to-zinc-800 border-zinc-700 font-semibold text-white px-5 py-2 rounded-full transition-all duration-300 relative z-50"
-          >
-            Join the Hype
-          </button>
+          <NavLinks />
+          <CTAButton />
         </motion.div>
       </motion.div>
 
-      {/* ---------------------------------------
-          MOBILE DROPDOWN MENU
-      ---------------------------------------- */}
-      <motion.div
-        initial={{ opacity: 1, y: -10, scaleY: 0 }}
-        animate={{
-          opacity: 1,
-          y: isMobileMenuOpen ? 0 : -10,
-          scaleY: isMobileMenuOpen ? 1 : 0,
-        }}
-        transition={{
-          duration: 0.4,
-          ease: [0.23, 1, 0.32, 1],
-        }}
-        style={{ transformOrigin: "top" }}
-        className={`md:hidden absolute top-full left-1/2 transform -translate-x-1/2 mt-4 w-80 max-w-[calc(100vw-2rem)] border border-zinc-700 rounded-4xl bg-black shadow-2xl shadow-zinc-800 overflow-hidden ${
-          isMobileMenuOpen ? "pointer-events-auto" : "pointer-events-none"
-        }`}
-      >
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isMobileMenuOpen ? 1 : 0 }}
-          transition={{
-            duration: 0.2,
-            delay: isMobileMenuOpen ? 0.3 : 0,
-            ease: [0.23, 1, 0.32, 1],
-          }}
-          className="p-6 pb-8"
-        >
-          {/* Navigation Links */}
-          <div className="flex flex-col mb-7 gap-5 items-center font-semibold">
-            {NAV_ITEMS.map((item, key) => (
-              <motion.div
-                key={key}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{
-                  opacity: isMobileMenuOpen ? 1 : 0,
-                  y: isMobileMenuOpen ? 0 : 10,
-                }}
-                transition={{
-                  duration: 0.3,
-                  delay: isMobileMenuOpen ? 0.4 + key * 0.1 : 0,
-                  ease: [0.23, 1, 0.32, 1],
-                }}
-              >
-                <Link href={item.link} className="block group relative">
-                  <div className="text-white cursor-pointer">{item.title}</div>
-
-                  {/* Underline hover animation */}
-                  <div className="absolute bottom-0 left-0 h-[2px] bg-white rounded-full w-0 group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]" />
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* CTA Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{
-              opacity: isMobileMenuOpen ? 1 : 0,
-              y: isMobileMenuOpen ? 0 : 10,
-            }}
-            transition={{
-              duration: 0.3,
-              delay: isMobileMenuOpen ? 0.7 : 0,
-              ease: [0.23, 1, 0.32, 1],
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="w-full bg-linear-to-t from-zinc-800 to-zinc-700 border border-zinc-700 hover:from-zinc-900 hover:to-zinc-800 font-semibold text-white px-6 py-3 rounded-full transition-all duration-300"
-            >
-              Join the Hype
-            </button>
-          </motion.div>
-        </motion.div>
-      </motion.div>
+      <MobileMenu isOpen={isMobileMenuOpen} />
     </div>
   );
 };
