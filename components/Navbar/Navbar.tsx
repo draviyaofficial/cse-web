@@ -20,6 +20,9 @@ const Navbar = () => {
   // Tracks how much user scrolls in a single direction
   const [scrollDelta, setScrollDelta] = useState(0);
 
+  // Mobile menu toggle
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   // Scroll distance required before hiding navbar
   const scrollThreshold = 120;
 
@@ -70,8 +73,26 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY, scrollDelta, scrollThreshold]);
 
+  // Handle clicking outside mobile menu to close it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (isMobileMenuOpen && !target.closest(".mobile-menu-container")) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
+
   return (
-    <div className="w-dvw h-[100px] flex items-center justify-center fixed top-0 left-0 z-9999">
+    <div className="mobile-menu-container w-dvw h-[100px] flex items-center justify-center fixed top-0 left-0 z-9999">
       {/* ---------------------------------------
           NAVBAR CONTAINER (Animated show/hide)
       ---------------------------------------- */}
@@ -123,6 +144,42 @@ const Navbar = () => {
         </motion.div>
 
         {/* ---------------------------------------
+            MOBILE BURGER MENU ICON
+        ---------------------------------------- */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isVisible ? 1 : 0 }}
+          transition={{
+            delay: isVisible ? 0.3 : 0,
+            duration: 0.4,
+            ease: [0.23, 1, 0.32, 1],
+          }}
+          className="md:hidden"
+        >
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="flex flex-col gap-1 p-2 hover:bg-zinc-800 rounded-lg transition-colors duration-200"
+            aria-label="Toggle mobile menu"
+          >
+            <div
+              className={`w-5 h-0.5 bg-white transition-all duration-300 ${
+                isMobileMenuOpen ? "rotate-45 translate-y-1.5" : ""
+              }`}
+            ></div>
+            <div
+              className={`w-5 h-0.5 bg-white transition-all duration-300 ${
+                isMobileMenuOpen ? "opacity-0" : ""
+              }`}
+            ></div>
+            <div
+              className={`w-5 h-0.5 bg-white transition-all duration-300 ${
+                isMobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""
+              }`}
+            ></div>
+          </button>
+        </motion.div>
+
+        {/* ---------------------------------------
             NAV LINKS + CTA
         ---------------------------------------- */}
         <motion.div
@@ -133,7 +190,7 @@ const Navbar = () => {
             duration: 0.4,
             ease: [0.23, 1, 0.32, 1],
           }}
-          className="flex gap-10"
+          className="hidden md:flex gap-10"
         >
           {/* ----- Navigation Links ------ */}
           <div className="flex gap-5 items-center font-semibold">
@@ -171,6 +228,85 @@ const Navbar = () => {
           >
             Join the Hype
           </button>
+        </motion.div>
+      </motion.div>
+
+      {/* ---------------------------------------
+          MOBILE DROPDOWN MENU
+      ---------------------------------------- */}
+      <motion.div
+        initial={{ opacity: 1, y: -10, scaleY: 0 }}
+        animate={{
+          opacity: 1,
+          y: isMobileMenuOpen ? 0 : -10,
+          scaleY: isMobileMenuOpen ? 1 : 0,
+        }}
+        transition={{
+          duration: 0.4,
+          ease: [0.23, 1, 0.32, 1],
+        }}
+        style={{ transformOrigin: "top" }}
+        className={`md:hidden absolute top-full left-1/2 transform -translate-x-1/2 mt-4 w-80 max-w-[calc(100vw-2rem)] border border-zinc-700 rounded-4xl bg-black shadow-2xl shadow-zinc-800 overflow-hidden ${
+          isMobileMenuOpen ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+      >
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isMobileMenuOpen ? 1 : 0 }}
+          transition={{
+            duration: 0.2,
+            delay: isMobileMenuOpen ? 0.3 : 0,
+            ease: [0.23, 1, 0.32, 1],
+          }}
+          className="p-6 pb-8"
+        >
+          {/* Navigation Links */}
+          <div className="flex flex-col mb-7 gap-5 items-center font-semibold">
+            {NAV_ITEMS.map((item, key) => (
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{
+                  opacity: isMobileMenuOpen ? 1 : 0,
+                  y: isMobileMenuOpen ? 0 : 10,
+                }}
+                transition={{
+                  duration: 0.3,
+                  delay: isMobileMenuOpen ? 0.4 + key * 0.1 : 0,
+                  ease: [0.23, 1, 0.32, 1],
+                }}
+              >
+                <Link href={item.link} className="block group relative">
+                  <div className="text-white cursor-pointer">{item.title}</div>
+
+                  {/* Underline hover animation */}
+                  <div className="absolute bottom-0 left-0 h-[2px] bg-white rounded-full w-0 group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]" />
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{
+              opacity: isMobileMenuOpen ? 1 : 0,
+              y: isMobileMenuOpen ? 0 : 10,
+            }}
+            transition={{
+              duration: 0.3,
+              delay: isMobileMenuOpen ? 0.7 : 0,
+              ease: [0.23, 1, 0.32, 1],
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full bg-linear-to-t from-zinc-800 to-zinc-700 border border-zinc-700 hover:from-zinc-900 hover:to-zinc-800 font-semibold text-white px-6 py-3 rounded-full transition-all duration-300"
+            >
+              Join the Hype
+            </button>
+          </motion.div>
         </motion.div>
       </motion.div>
     </div>
