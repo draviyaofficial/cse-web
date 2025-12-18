@@ -9,7 +9,8 @@ const mockIPOs = [
     id: "1",
     creator: "Alex Chen",
     name: "TechVision Studios",
-    description: "AI-powered video creation tools for content creators. Revolutionizing how creators produce and edit video content with machine learning.",
+    description:
+      "AI-powered video creation tools for content creators. Revolutionizing how creators produce and edit video content with machine learning.",
     progress: 75,
     target: "$500K",
     raised: "$375K",
@@ -25,7 +26,8 @@ const mockIPOs = [
     id: "2",
     creator: "Sarah Johnson",
     name: "FitLife Academy",
-    description: "Personalized fitness and nutrition coaching platform. Using AI to create custom workout plans and meal prep guidance.",
+    description:
+      "Personalized fitness and nutrition coaching platform. Using AI to create custom workout plans and meal prep guidance.",
     progress: 60,
     target: "$300K",
     raised: "$180K",
@@ -41,7 +43,8 @@ const mockIPOs = [
     id: "3",
     creator: "Marcus Rodriguez",
     name: "GameDev Pro",
-    description: "Professional game development tools and assets marketplace. Connecting indie developers with high-quality game assets and tools.",
+    description:
+      "Professional game development tools and assets marketplace. Connecting indie developers with high-quality game assets and tools.",
     progress: 90,
     target: "$750K",
     raised: "$675K",
@@ -57,7 +60,8 @@ const mockIPOs = [
     id: "4",
     creator: "Priya Patel",
     name: "ContentFlow",
-    description: "All-in-one content management and scheduling platform for social media creators. Streamline your content workflow.",
+    description:
+      "All-in-one content management and scheduling platform for social media creators. Streamline your content workflow.",
     progress: 45,
     target: "$400K",
     raised: "$180K",
@@ -73,7 +77,8 @@ const mockIPOs = [
     id: "5",
     creator: "David Kim",
     name: "MusicMaster AI",
-    description: "AI-powered music production and mixing tools. Democratizing professional music production for creators worldwide.",
+    description:
+      "AI-powered music production and mixing tools. Democratizing professional music production for creators worldwide.",
     progress: 30,
     target: "$600K",
     raised: "$180K",
@@ -103,10 +108,13 @@ export default function IPOsPage() {
   ];
 
   const filteredIPOs = mockIPOs.filter((ipo) => {
-    const matchesSearch = ipo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         ipo.creator.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         ipo.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "All Categories" || ipo.category === selectedCategory;
+    const matchesSearch =
+      ipo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ipo.creator.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ipo.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "All Categories" ||
+      ipo.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -117,21 +125,24 @@ export default function IPOsPage() {
       case "daysLeft":
         return a.daysLeft - b.daysLeft;
       case "raised":
-        return parseFloat(b.raised.replace(/[$,K]/g, '')) - parseFloat(a.raised.replace(/[$,K]/g, ''));
+        return (
+          parseFloat(b.raised.replace(/[$,K]/g, "")) -
+          parseFloat(a.raised.replace(/[$,K]/g, ""))
+        );
       default:
         return 0;
     }
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 bg-white rounded-xl p-10 min-h-[96.3vh]">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
-            IPOs
+          <h1 className="text-5xl font-semibold tracking-tight text-zinc-900">
+            Initial Public Offerings
           </h1>
-          <p className="text-zinc-500 mt-1">
+          <p className="text-zinc-400 text-lg mt-1">
             Invest in creator ventures before they go public.
           </p>
         </div>
@@ -147,7 +158,7 @@ export default function IPOsPage() {
             placeholder="Search IPOs..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full pl-10 pr-4 py-2.5 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F2723B] focus:border-[#F2723B]"
           />
         </div>
 
@@ -156,7 +167,7 @@ export default function IPOsPage() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="appearance-none bg-white border border-zinc-200 rounded-lg px-4 py-2.5 pr-8 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="appearance-none bg-white border border-zinc-200 rounded-lg px-4 py-2.5 pr-8 focus:ring-2 focus:ring-[#F2723B] focus:border-[#F2723B]"
           >
             {categories.map((category) => (
               <option key={category} value={category}>
@@ -172,7 +183,7 @@ export default function IPOsPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="appearance-none bg-white border border-zinc-200 rounded-lg px-4 py-2.5 pr-8 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="appearance-none bg-white border border-zinc-200 rounded-lg px-4 py-2.5 pr-8 focus:ring-2 focus:ring-[#F2723B] focus:border-{#F2723B]"
           >
             <option value="daysLeft">Ending Soon</option>
             <option value="progress">Most Funded</option>
@@ -183,48 +194,56 @@ export default function IPOsPage() {
 
       {/* IPO Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <p className="text-sm font-medium text-zinc-500">Active IPOs</p>
-          <p className="text-2xl font-bold text-zinc-900 mt-1">12</p>
-          <p className="text-sm text-green-600 mt-2">3 ending this week</p>
+        <div className="rounded-3xl bg-[#F2723B] p-7">
+          <p className="text-lg font-medium text-gray-200">Active IPOs</p>
+          <p className="text-[2.8rem] font-bold text-white mt-1">12</p>
+          <p className="text-sm text-[#f7e1c5] mt-2">3 ending this week</p>
         </div>
-        <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <p className="text-sm font-medium text-zinc-500">Total Raised</p>
-          <p className="text-2xl font-bold text-zinc-900 mt-1">$2.8M</p>
-          <p className="text-sm text-green-600 mt-2">+24.5% this month</p>
+        <div className="rounded-3xl bg-[#f9efe3] p-7">
+          <p className="text-lg font-medium text-zinc-900">Total Raised</p>
+          <p className="text-[2.8rem] font-bold text-zinc-900 mt-1">$2.8M</p>
+          <p className="text-sm text-[#F2723B] mt-2">+24.5% this month</p>
         </div>
-        <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <p className="text-sm font-medium text-zinc-500">Avg. Success Rate</p>
-          <p className="text-2xl font-bold text-zinc-900 mt-1">78%</p>
-          <p className="text-sm text-green-600 mt-2">+5% from last quarter</p>
+        <div className="rounded-3xl bg-[#f9efe3] p-7">
+          <p className="text-lg font-medium text-zinc-900">Avg. Success Rate</p>
+          <p className="text-[2.8rem] font-bold text-zinc-900 mt-1">78%</p>
+          <p className="text-sm text-[#F2723B] mt-2">+5% from last quarter</p>
         </div>
-        <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <p className="text-sm font-medium text-zinc-500">Total Investors</p>
-          <p className="text-2xl font-bold text-zinc-900 mt-1">1,543</p>
-          <p className="text-sm text-green-600 mt-2">+18.2% this month</p>
+        <div className="rounded-3xl bg-[#f9efe3] p-7">
+          <p className="text-lg font-medium text-zinc-900">Total Investors</p>
+          <p className="text-[2.8rem] font-bold text-zinc-900 mt-1">1,543</p>
+          <p className="text-sm text-[#F2723B] mt-2">+18.2% this month</p>
         </div>
       </div>
 
       {/* IPO Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sortedIPOs.map((ipo) => (
-          <div key={ipo.id} className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div
+            key={ipo.id}
+            className="rounded-3xl border border-zinc-200 bg-white p-6"
+          >
             <div className="flex items-center gap-4 mb-4">
-              <img
-                src={ipo.avatar}
-                alt={ipo.creator}
-                className="h-12 w-12 rounded-full"
-              />
+              <div className="h-12 w-12 rounded-full bg-[#f9efe3] flex items-center justify-center text-zinc-900 font-semibold text-sm">
+                {ipo.creator
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .slice(0, 2)
+                  .toUpperCase()}
+              </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-zinc-900">{ipo.name}</h3>
                 <p className="text-sm text-zinc-500">by {ipo.creator}</p>
               </div>
-              <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600">
+              <span className="rounded-full px-2.5 py-1 text-xs font-medium text-zinc-600 border border-zinc-300">
                 {ipo.category}
               </span>
             </div>
 
-            <p className="text-sm text-zinc-600 mb-4 line-clamp-3">{ipo.description}</p>
+            <p className="text-sm text-zinc-600 mb-4 line-clamp-3">
+              {ipo.description}
+            </p>
 
             {/* Progress Bar */}
             <div className="mb-4">
@@ -234,11 +253,13 @@ export default function IPOsPage() {
               </div>
               <div className="w-full bg-zinc-200 rounded-full h-2">
                 <div
-                  className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                  className="bg-[#F2723B] h-2 rounded-full transition-all duration-300"
                   style={{ width: `${ipo.progress}%` }}
                 />
               </div>
-              <p className="text-xs text-zinc-500 mt-1">{ipo.progress}% funded • {ipo.backers} backers</p>
+              <p className="text-xs text-zinc-500 mt-1">
+                {ipo.progress}% funded • {ipo.backers} backers
+              </p>
             </div>
 
             {/* Investment Info */}
@@ -246,7 +267,9 @@ export default function IPOsPage() {
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <p className="text-zinc-500">Min Investment</p>
-                  <p className="font-medium text-zinc-900">{ipo.minInvestment}</p>
+                  <p className="font-medium text-zinc-900">
+                    {ipo.minInvestment}
+                  </p>
                 </div>
                 <div>
                   <p className="text-zinc-500">Valuation</p>
@@ -261,7 +284,7 @@ export default function IPOsPage() {
                 <Clock className="h-4 w-4" />
                 <span>{ipo.daysLeft} days left</span>
               </div>
-              <button className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors">
+              <button className="rounded-lg bg-[#F2723B] px-4 py-2 text-sm font-medium text-white hover:bg-[#f2723be1] transition-colors">
                 Participate
               </button>
             </div>
@@ -271,5 +294,3 @@ export default function IPOsPage() {
     </div>
   );
 }
-
-
