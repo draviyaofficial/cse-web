@@ -2,7 +2,17 @@
 
 import React, { useState } from "react";
 import { useUser } from "@/services/auth/model/hooks/useUser";
-import { Wallet, Shield, Bell, User, Eye, EyeOff, Save, AlertTriangle } from "lucide-react";
+import {
+  Wallet,
+  Shield,
+  Bell,
+  User,
+  Eye,
+  EyeOff,
+  Save,
+  AlertTriangle,
+  X,
+} from "lucide-react";
 
 export default function SettingsPage() {
   const { data: user } = useUser();
@@ -16,7 +26,10 @@ export default function SettingsPage() {
   const [kycStatus] = useState("pending"); // Mock KYC status
 
   const mockWalletAddress = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
-  const maskedAddress = `${mockWalletAddress.slice(0, 6)}...${mockWalletAddress.slice(-4)}`;
+  const maskedAddress = `${mockWalletAddress.slice(
+    0,
+    6
+  )}...${mockWalletAddress.slice(-4)}`;
 
   return (
     <div className="space-y-8">
@@ -97,7 +110,11 @@ export default function SettingsPage() {
                 onClick={() => setShowWalletAddress(!showWalletAddress)}
                 className="ml-auto text-zinc-400 hover:text-zinc-600"
               >
-                {showWalletAddress ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showWalletAddress ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
               </button>
             </div>
           </div>
@@ -133,17 +150,20 @@ export default function SettingsPage() {
             <div>
               <p className="font-medium text-zinc-900">Identity Verification</p>
               <p className="text-sm text-zinc-500 mt-1">
-                Complete KYC to unlock higher investment limits and additional features.
+                Complete KYC to unlock higher investment limits and additional
+                features.
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${
-                kycStatus === "verified"
-                  ? "text-green-700 bg-green-50"
-                  : kycStatus === "pending"
-                  ? "text-yellow-700 bg-yellow-50"
-                  : "text-red-700 bg-red-50"
-              }`}>
+              <div
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${
+                  kycStatus === "verified"
+                    ? "text-green-700 bg-green-50"
+                    : kycStatus === "pending"
+                    ? "text-yellow-700 bg-yellow-50"
+                    : "text-red-700 bg-red-50"
+                }`}
+              >
                 {kycStatus === "verified" ? (
                   <Shield className="h-4 w-4" />
                 ) : kycStatus === "pending" ? (
@@ -155,7 +175,9 @@ export default function SettingsPage() {
               </div>
               {kycStatus !== "verified" && (
                 <button className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors">
-                  {kycStatus === "pending" ? "Complete KYC" : "Start Verification"}
+                  {kycStatus === "pending"
+                    ? "Complete KYC"
+                    : "Start Verification"}
                 </button>
               )}
             </div>
@@ -177,7 +199,8 @@ export default function SettingsPage() {
             {
               key: "email",
               label: "Email Notifications",
-              description: "Receive updates about your investments and platform news",
+              description:
+                "Receive updates about your investments and platform news",
             },
             {
               key: "push",
@@ -192,7 +215,8 @@ export default function SettingsPage() {
             {
               key: "marketing",
               label: "Marketing Communications",
-              description: "Receive promotional offers and new feature announcements",
+              description:
+                "Receive promotional offers and new feature announcements",
             },
           ].map(({ key, label, description }) => (
             <div key={key} className="flex items-center justify-between">
@@ -205,9 +229,9 @@ export default function SettingsPage() {
                   type="checkbox"
                   checked={notifications[key as keyof typeof notifications]}
                   onChange={(e) =>
-                    setNotifications(prev => ({
+                    setNotifications((prev) => ({
                       ...prev,
-                      [key]: e.target.checked
+                      [key]: e.target.checked,
                     }))
                   }
                   className="sr-only peer"
@@ -230,7 +254,8 @@ export default function SettingsPage() {
             <div>
               <p className="font-medium text-red-900">Disconnect Wallet</p>
               <p className="text-sm text-red-700 mt-1">
-                This will disconnect your wallet from the platform. You can reconnect at any time.
+                This will disconnect your wallet from the platform. You can
+                reconnect at any time.
               </p>
             </div>
             <button className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition-colors">
@@ -242,5 +267,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
-

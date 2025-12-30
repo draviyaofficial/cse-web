@@ -4,22 +4,23 @@ import HeroLogos from "./hero-logos";
 import { motion } from "motion/react";
 import HeroText from "./hero-text";
 import Link from "next/link";
+import WaitlistForm from "../waitlist/waitlist-form";
 
 const SOCIALS = [
   {
     title: "Twitter",
     icon: "/images/socials/twitter.png",
-    link: "",
+    link: "https://x.com/Draviyaofficial",
   },
   {
     title: "Instagram",
     icon: "/images/socials/instagram.png",
-    link: "",
+    link: "https://www.instagram.com/draviyaofficial",
   },
   {
     title: "GitHub",
     icon: "/images/socials/github.png",
-    link: "",
+    link: "https://github.com/draviyaofficial",
   },
 ];
 
@@ -85,15 +86,12 @@ const Hero = () => {
 
       <div className="flex flex-col items-center justify-center my-30 gap-10">
         <h2 className="font-medium text-lg sm:text-2xl text-center">
-          You’ve been investing in creators emotionally.
+          You've been investing in creators emotionally.
           <br /> Try financially.
         </h2>
-        <button
-          type="button"
-          className="text-md sm:text-xl border border-zinc-900 bg-linear-to-t from-[#FF2F00] to-[#f5775b] cursor-pointer hover:from-[#FF2F00] hover:to-[#FF2F00] font-semibold text-white px-7 py-3 rounded-full transition-all duration-300 relative z-50"
-        >
-          Join the revolution
-        </button>
+        <div className="w-full max-w-2xl px-5">
+          <WaitlistForm variant="hero" showCounter={true} />
+        </div>
         <div className="flex flex-col gap-3 items-center">
           <div className="flex">
             {SOCIALS.map((social, index) => {

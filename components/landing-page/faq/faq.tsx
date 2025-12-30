@@ -63,7 +63,7 @@ const FAQ = () => {
           </p>
 
           <Link
-            href=""
+            href="/contact"
             className="text-[#FF2F00] text-base sm:text-lg font-semibold flex gap-3 items-center justify-start lg:justify-end w-fit"
           >
             <span>Contact us</span>

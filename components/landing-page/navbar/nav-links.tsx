@@ -2,9 +2,8 @@ import { motion } from "motion/react";
 import Link from "next/link";
 
 const NAV_ITEMS = [
-  { title: "Resources", link: "/resources" },
   { title: "About", link: "/about" },
-  { title: "Connect", link: "/connect" },
+  { title: "Contact", link: "/contact" },
 ];
 
 /* 1. Define Parent Variants (Entrance Animation) */

@@ -1,40 +1,37 @@
 import Link from "next/link";
 import { FaArrowTurnDown } from "react-icons/fa6";
+import NewsletterSignup from "./newsletter-signup";
 
 const SOCIALS = [
   {
     title: "Twitter",
     icon: "/images/socials/twitter.png",
-    link: "",
+    link: "https://x.com/Draviyaofficial",
   },
   {
     title: "Instagram",
     icon: "/images/socials/instagram.png",
-    link: "",
+    link: "https://www.instagram.com/draviyaofficial",
   },
   {
     title: "GitHub",
     icon: "/images/socials/github.png",
-    link: "",
+    link: "https://github.com/draviyaofficial",
   },
 ];
 
 const FOOTER_ITEMS = [
   {
     title: "Home",
-    link: "",
+    link: "/",
   },
   {
     title: "About",
-    link: "",
+    link: "/about",
   },
   {
     title: "Contact",
-    link: "",
-  },
-  {
-    title: "Terms of Service",
-    link: "",
+    link: "/contact",
   },
 ];
 
@@ -52,12 +49,7 @@ const Footer = () => {
             <h2 className="font-medium text-2xl sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl text-center max-w-sm sm:max-w-2xl lg:max-w-3xl xl:max-w-4xl px-4 leading-tight">
               Invest in creators before everyone else gets it.
             </h2>
-            <button
-              type="button"
-              className="text-sm sm:text-base lg:text-lg xl:text-xl border border-zinc-900 bg-linear-to-t from-[#FF2F00] to-[#f5775b] cursor-pointer hover:from-[#FF2F00] hover:to-[#FF2F00] font-semibold text-white px-4 sm:px-5 lg:px-6 xl:px-7 py-2 sm:py-2.5 lg:py-3 rounded-full transition-all duration-300 relative z-50"
-            >
-              Invest Like It's 2026
-            </button>
+
             <div className="flex flex-col gap-2 sm:gap-3 items-center">
               <div className="flex gap-2 sm:gap-3 lg:gap-4">
                 {SOCIALS.map((social, index) => {
@@ -106,19 +98,7 @@ const Footer = () => {
             <div className="text-white font-medium text-sm sm:text-base lg:text-lg">
               Stay in touch
             </div>
-            <div className="w-full h-10 sm:h-11 lg:h-12 xl:h-[50px] bg-[#121111cb] rounded-lg sm:rounded-xl border border-zinc-700 flex justify-between p-[2px]">
-              <input
-                type="text"
-                placeholder="name@gmail.com"
-                className="w-full px-3 sm:px-4 lg:px-5 focus:outline-none text-sm sm:text-base bg-transparent text-white placeholder-zinc-400"
-              />
-              <button className="w-fit px-4 sm:px-5 lg:px-6 xl:px-7 py-1.5 sm:py-2 bg-[#292929] hover:bg-[#3a3a3a] rounded-lg sm:rounded-xl flex gap-2 sm:gap-3 lg:gap-4 xl:gap-5 items-center transition-colors">
-                <FaArrowTurnDown className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 rotate-90" />
-                <span className="text-xs sm:text-sm lg:text-base">
-                  Subscribe
-                </span>
-              </button>
-            </div>
+            <NewsletterSignup />
           </div>
         </div>
       </div>
