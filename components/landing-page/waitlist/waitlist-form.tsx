@@ -159,9 +159,9 @@ export default function WaitlistForm({
       toast.success("Welcome to the waitlist!");
       
       // Reset everything
-      setStep("email");
-      setOtp("");
-      reset();
+      setOtp(""); // Clear OTP first
+      reset(); // Clear email form
+      setStep("email"); // Reset to email step
       onSuccess?.();
 
       // Update count
