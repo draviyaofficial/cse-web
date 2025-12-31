@@ -156,12 +156,12 @@ export default function WaitlistForm({
         return;
       }
 
-      toast.success("Welcome to the waitlist!");
-      
-      // Reset everything
-      setOtp(""); // Clear OTP first
-      reset(); // Clear email form
+      // Clear OTP immediately and reset form
+      setOtp("");
+      reset({ email: "" }); // Explicitly reset email to empty
       setStep("email"); // Reset to email step
+      
+      toast.success("Welcome to the waitlist!");
       onSuccess?.();
 
       // Update count
@@ -191,6 +191,7 @@ export default function WaitlistForm({
           {/* STEP 1: EMAIL FORM */}
           {step === "email" ? (
             <form
+              key="email-form"
               onSubmit={handleSubmit(onRequestOtp)}
               className="flex flex-col sm:flex-row gap-4 w-full"
             >
@@ -225,7 +226,11 @@ export default function WaitlistForm({
             </form>
           ) : (
             /* STEP 2: OTP FORM */
-            <form onSubmit={onVerifyOtp} className="flex flex-col sm:flex-row gap-4 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <form 
+              key="otp-form"
+              onSubmit={onVerifyOtp} 
+              className="flex flex-col sm:flex-row gap-4 w-full animate-in fade-in slide-in-from-bottom-4 duration-500"
+            >
               <div className="flex-1 group relative">
                 <Input
                   type="text"
