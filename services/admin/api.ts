@@ -30,6 +30,8 @@ interface FetchApplicationsParams {
   page?: number;
   limit?: number;
   status?: string;
+  sortBy?: "asc" | "desc";
+  timeRange?: string;
 }
 
 export const fetchApplicationsFn = async (
@@ -40,6 +42,8 @@ export const fetchApplicationsFn = async (
     page: (params.page || 1).toString(),
     limit: (params.limit || 20).toString(),
     ...(params.status ? { status: params.status } : {}),
+    ...(params.sortBy ? { sortBy: params.sortBy } : {}),
+    ...(params.timeRange ? { timeRange: params.timeRange } : {}),
   });
 
   const response = await fetch(`${API_URL}/v1/creator-onboarding?${query}`, {
@@ -59,27 +63,29 @@ export const fetchApplicationsFn = async (
   return json.data;
 };
 
-export const approveApplicationFn = async (
+export const updateApplicationStateFn = async (
   token: string,
   applicationId: string,
-  sector: string
+  state: string,
+  sector?: string,
+  rejectionReason?: string
 ) => {
   const response = await fetch(
-    `${API_URL}/v1/creator-onboarding/${applicationId}/approve`,
+    `${API_URL}/v1/creator-onboarding/${applicationId}`,
     {
-      method: "POST",
+      method: "PATCH",
       headers: {
         ...defaultHeaders,
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ sector }),
+      body: JSON.stringify({ state, sector, rejectionReason }),
     }
   );
 
   const json: BackendResponse<any> = await response.json();
 
   if (!response.ok || !json.ok) {
-    throw new Error(json.message || "Failed to approve application");
+    throw new Error(json.message || "Failed to update application state");
   }
 
   return json.data;

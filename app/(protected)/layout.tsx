@@ -15,6 +15,7 @@ import {
   HelpCircle,
   LogOut,
   X,
+  Rocket,
 } from "lucide-react";
 import { useAuth } from "@/services/auth/model/hooks/useAuth";
 import { useUser } from "@/services/auth/model/hooks/useUser";
@@ -137,6 +138,38 @@ export default function ProtectedLayout({
                 </Link>
               );
             })}
+
+            {/* Creator Only Links */}
+            {user?.role === "CREATOR" && (
+              <Link
+                href="/token/launch"
+                className="group flex items-center gap-3 rounded-lg text-sm font-medium transition-colors"
+                onClick={() => setSidebarOpen(false)}
+              >
+                <div
+                  className={`w-2.5 mr-5 h-10 ${
+                    pathname === "/token/launch" ? "bg-[#F2723B]" : "bg-none"
+                  } rounded-r-2xl`}
+                ></div>
+                <Rocket
+                  className={cn(
+                    "h-6 w-6 shrink-0",
+                    pathname === "/token/launch"
+                      ? "text-[#F2723B]"
+                      : "text-zinc-400 group-hover:text-zinc-600"
+                  )}
+                />
+                <div
+                  className={`text-xl ${
+                    pathname === "/token/launch"
+                      ? "text-zinc-800 font-semibold"
+                      : "text-zinc-400"
+                  }`}
+                >
+                  Token Launch
+                </div>
+              </Link>
+            )}
           </nav>
 
           <div className="py-4 px-5 text-sm font-semibold text-zinc-400">
