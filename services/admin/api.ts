@@ -90,3 +90,75 @@ export const updateApplicationStateFn = async (
 
   return json.data;
 };
+
+export interface EligibleCreator {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  creatorProfile: {
+    displayName: string;
+    profilePicUrl: string | null;
+    sector: string | null;
+  } | null;
+  createdToken: {
+    id: string;
+    name: string;
+    symbol: string;
+    totalSupply: string;
+    mintAddress: string;
+  } | null;
+  tokenApplication: {
+    initialSupply: number;
+    status: string;
+  } | null;
+}
+
+export const getEligibleCreatorsFn = async (
+  token: string
+): Promise<EligibleCreator[]> => {
+  const response = await fetch(`${API_URL}/v1/admin/eligible-creators`, {
+    method: "GET",
+    headers: {
+      ...defaultHeaders,
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const json: BackendResponse<EligibleCreator[]> = await response.json();
+
+  if (!response.ok || !json.ok) {
+    throw new Error(json.message || "Failed to fetch eligible creators");
+  }
+
+  return json.data;
+};
+
+export interface CreateIROInput {
+  tokenId: string;
+  startTime: string;
+  endTime: string;
+  hardCap: number;
+  tokensForSale: number;
+  vestingPeriod: number;
+  cliffPeriod: number;
+}
+
+export const createIROFn = async (token: string, data: CreateIROInput) => {
+  const response = await fetch(`${API_URL}/v1/admin/iro/create`, {
+    method: "POST",
+    headers: {
+      ...defaultHeaders,
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  const json: BackendResponse<any> = await response.json();
+
+  if (!response.ok || !json.ok) {
+    throw new Error(json.message || "Failed to create IRO");
+  }
+
+  return json.data;
+};

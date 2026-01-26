@@ -25,23 +25,25 @@ const AdminLoginPage = () => {
   }, [ready, isAuthenticated, router, user, isUserLoading, logout]);
 
   return (
-    <AuthCard
-      title="Admin Portal"
-      description="Authorized personnel only."
-      submitLabel="Admin Login"
-      isSubmitting={isLoggingIn}
-      showSocial={false}
-    >
-      <div className="flex flex-col gap-4">
-        <Button
-          onClick={login}
-          disabled={isLoggingIn}
-          className="w-full bg-red-600 hover:bg-red-700 text-white"
-        >
-          {isLoggingIn ? "Verifying..." : "Authenticate as Admin"}
-        </Button>
-      </div>
-    </AuthCard>
+    <div className="flex h-screen w-full items-center justify-center bg-[#f9efe3] p-4">
+      <AuthCard
+        title="Admin Portal"
+        description="Authorized personnel only."
+        submitLabel="Admin Login"
+        isSubmitting={isLoggingIn}
+        showSocial={false}
+      >
+        <div className="flex flex-col gap-4">
+          <Button
+            onClick={login}
+            disabled={isLoggingIn}
+            className="w-full bg-red-600 hover:bg-red-700 text-white"
+          >
+            {isLoggingIn ? "Verifying..." : "Authenticate as Admin"}
+          </Button>
+        </div>
+      </AuthCard>
+    </div>
   );
 };
 
