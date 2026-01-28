@@ -15,10 +15,19 @@ import {
 } from "lucide-react";
 
 import { usePrivy } from "@privy-io/react-auth";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { updateUserFn, fetchMeFn } from "@/services/auth/model/api/mutations";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import ImageUpload from "@/components/ui/image-upload";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { countries } from "@/lib/constants/countries";
 
 export default function SettingsPage() {
   const { data: user, isLoading: isUserLoading } = useUser();
@@ -28,6 +37,7 @@ export default function SettingsPage() {
   const [lastName, setLastName] = useState("");
   const [country, setCountry] = useState("");
   const [email, setEmail] = useState("");
+  const [profilePicUrl, setProfilePicUrl] = useState("");
 
   const { data: dbUser, isLoading: isDbUserLoading } = useQuery({
     queryKey: ["me"],
@@ -48,6 +58,7 @@ export default function SettingsPage() {
       setLastName(dbUser.lastName || "");
       setCountry(dbUser.country || "");
       setEmail(dbUser.email || "");
+      setProfilePicUrl(dbUser.profilePicUrl || "");
     }
     // If dbUser is not yet loaded or empty, we could fallback to `user` (Privy user)
     // but typically `dbUser` is the source of truth for these profile fields.
@@ -59,15 +70,21 @@ export default function SettingsPage() {
     }
   }, [dbUser, user]);
 
+  const queryClient = useQueryClient();
+
   const { mutate: updateProfile, isPending } = useMutation({
     mutationFn: async () => {
       const token = await getAccessToken();
       if (!token) throw new Error("No token");
 
-      return updateUserFn({ firstName, lastName, country }, token);
+      return updateUserFn(
+        { firstName, lastName, country, profilePicUrl: profilePicUrl || "" },
+        token,
+      );
     },
     onSuccess: () => {
       toast.success("Profile updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["me"] });
     },
     onError: (err) => {
       toast.error("Failed to update profile");
@@ -167,6 +184,33 @@ export default function SettingsPage() {
           </h2>
         </div>
 
+        <div className="flex items-center gap-6 py-4">
+          <div className="w-24 h-24 rounded-full overflow-hidden border border-zinc-200 bg-zinc-50 shrink-0">
+            {profilePicUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={profilePicUrl}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-zinc-100 text-zinc-400">
+                <User className="w-8 h-8" />
+              </div>
+            )}
+          </div>
+          <div className="flex-1 max-w-sm">
+            <ImageUpload
+              value={profilePicUrl}
+              onChange={setProfilePicUrl}
+              disabled={isPending}
+            />
+            <p className="text-xs text-zinc-500 mt-2">
+              Recommended: Square image, max 5MB.
+            </p>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-2">
@@ -207,13 +251,18 @@ export default function SettingsPage() {
             <label className="block text-sm font-medium text-zinc-700 mb-2">
               Country
             </label>
-            <input
-              type="text"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              placeholder="Enter your country"
-              className="w-full px-4 py-3 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
-            />
+            <Select value={country} onValueChange={setCountry}>
+              <SelectTrigger className="w-full px-4 py-3 h-auto border border-zinc-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none">
+                <SelectValue placeholder="Select your country" />
+              </SelectTrigger>
+              <SelectContent>
+                {countries.map((c) => (
+                  <SelectItem key={c.value} value={c.value}>
+                    {c.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -248,7 +297,7 @@ export default function SettingsPage() {
               {dbUser?.walletAddress || user?.walletAddress ? (
                 `${(dbUser?.walletAddress || user?.walletAddress || "").slice(
                   0,
-                  6
+                  6,
                 )}...${(
                   dbUser?.walletAddress ||
                   user?.walletAddress ||
@@ -318,8 +367,8 @@ export default function SettingsPage() {
                   kycStatus === "verified"
                     ? "text-green-700 bg-green-50"
                     : kycStatus === "pending"
-                    ? "text-yellow-700 bg-yellow-50"
-                    : "text-red-700 bg-red-50"
+                      ? "text-yellow-700 bg-yellow-50"
+                      : "text-red-700 bg-red-50"
                 }`}
               >
                 {kycStatus === "verified" ? (

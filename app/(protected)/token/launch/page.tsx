@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
@@ -38,6 +38,7 @@ import {
   Coins,
 } from "lucide-react";
 import NextImage from "next/image";
+import ImageUpload from "@/components/ui/image-upload";
 
 // Schema Validation
 const tokenSchema = z.object({
@@ -123,6 +124,7 @@ export default function TokenLaunchPage() {
     register,
     handleSubmit,
     watch,
+    control,
     formState: { errors },
     trigger,
   } = form;
@@ -480,18 +482,26 @@ export default function TokenLaunchPage() {
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="logoUrl">Logo URL</Label>
-                <Input
-                  id="logoUrl"
-                  placeholder="https://..."
-                  {...register("logoUrl")}
-                />
-                {errors.logoUrl && (
-                  <p className="text-sm text-red-500">
-                    {errors.logoUrl.message}
-                  </p>
-                )}
+              <div className="space-y-4">
+                <Label>Token Logo</Label>
+                <div className="space-y-2">
+                  <Controller
+                    control={control}
+                    name="logoUrl"
+                    render={({ field }) => (
+                      <ImageUpload
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                        disabled={mutation.isPending}
+                      />
+                    )}
+                  />
+                  {errors.logoUrl && (
+                    <p className="text-sm text-red-500">
+                      {errors.logoUrl.message}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 

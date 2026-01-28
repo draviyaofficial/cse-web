@@ -114,9 +114,9 @@ export interface EligibleCreator {
   email: string;
   firstName: string;
   lastName: string;
+  profilePicUrl: string | null;
   creatorProfile: {
     displayName: string;
-    profilePicUrl: string | null;
     sector: string | null;
   } | null;
   createdToken: {

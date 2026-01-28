@@ -217,9 +217,21 @@ export default function ProtectedLayout({
           {/* User section */}
           <div className="p-4">
             <div className="flex items-center gap-3 mb-3">
-              <div className="h-14 w-14 rounded-full bg-orange-100 flex items-center justify-center text-zinc-600 font-bold">
-                {(user.name || "Guest").charAt(0).toUpperCase()}
-              </div>
+              {user.profilePicUrl ? (
+                <div className="h-14 w-14 rounded-full overflow-hidden border border-zinc-200 shrink-0">
+                  <Image
+                    src={user.profilePicUrl}
+                    alt={user.name || "Profile"}
+                    width={56}
+                    height={56}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="h-14 w-14 rounded-full bg-orange-100 flex items-center justify-center text-zinc-600 font-bold shrink-0">
+                  {(user.name || "Guest").charAt(0).toUpperCase()}
+                </div>
+              )}
               <div className="flex-1 min-w-0">
                 <p className="text-lg font-medium text-zinc-900 truncate">
                   {user.name || "Guest"}

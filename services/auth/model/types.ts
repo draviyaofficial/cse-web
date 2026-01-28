@@ -15,6 +15,7 @@ export interface User {
   country?: string;
   walletAddress?: string;
   role?: string;
+  profilePicUrl?: string;
 }
 
 // Login Inputs & Outputs

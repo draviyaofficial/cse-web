@@ -20,9 +20,9 @@ export interface IRO {
     symbol: string;
     mintAddress: string;
     user: {
+      profilePicUrl: string | null;
       creatorProfile: {
         displayName: string;
-        profilePicUrl: string | null;
         sector: string | null;
       } | null;
     };

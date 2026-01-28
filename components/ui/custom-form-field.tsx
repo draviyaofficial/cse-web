@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label"; // Optional: if you want labels
+import { CustomPhoneInput } from "@/components/ui/phone-input";
 
 // --- STYLES ---
 // This ensures the Select and Textarea look exactly like your Inputs
@@ -39,7 +40,7 @@ interface CustomFormFieldProps<T extends FieldValues> {
   type?: string; // HTML Input type (text, password, number)
   autoComplete?: string;
   description?: string;
-  fieldType?: "input" | "textarea" | "select"; // Logic switcher
+  fieldType?: "input" | "textarea" | "select" | "phone"; // Logic switcher
   options?: Option[]; // For Select types
   className?: string; // Allow custom overrides
   disabled?: boolean;
@@ -82,7 +83,7 @@ export const CustomFormField = <T extends FieldValues>({
           <div
             className={cn(
               CONTAINER_STYLES,
-              fieldState.invalid && "border-red-500 ring-red-200" // Optional: visual error state on container
+              fieldState.invalid && "border-red-500 ring-red-200", // Optional: visual error state on container
             )}
           >
             {/* 1. STANDARD INPUT */}
@@ -119,7 +120,7 @@ export const CustomFormField = <T extends FieldValues>({
                 <SelectTrigger
                   className={cn(
                     INNER_INPUT_STYLES,
-                    "flex w-full items-center justify-between"
+                    "flex w-full items-center justify-between",
                   )}
                 >
                   <SelectValue placeholder={placeholder} />
@@ -132,6 +133,17 @@ export const CustomFormField = <T extends FieldValues>({
                   ))}
                 </SelectContent>
               </Select>
+            )}
+
+            {/* 4. PHONE INPUT */}
+            {fieldType === "phone" && (
+              <CustomPhoneInput
+                value={field.value}
+                onChange={field.onChange}
+                placeholder={placeholder}
+                disabled={disabled}
+                className={INNER_INPUT_STYLES}
+              />
             )}
           </div>
 

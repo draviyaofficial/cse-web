@@ -25,6 +25,7 @@ export const useUser = () => {
         externalAuthId: dbUser.externalAuthId || user?.id || "",
         email: dbUser.email || user?.email?.address || "",
         walletAddress: dbUser.walletAddress || user?.wallet?.address,
+        profilePicUrl: dbUser.profilePicUrl,
         // Use DB name if present, otherwise no fallback to avoid "User" or email
         name:
           (dbUser.firstName ? `${dbUser.firstName} ` : "") +

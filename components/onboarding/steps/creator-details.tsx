@@ -24,6 +24,7 @@ export const StepCreatorDetails = () => {
           control={control}
           name="phoneNumber"
           label="Phone Number"
+          fieldType="phone"
           placeholder="+1234567890"
         />
       </div>
